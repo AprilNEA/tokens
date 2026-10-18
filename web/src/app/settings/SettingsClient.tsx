@@ -6,6 +6,7 @@ import { EyeIcon, KeyIcon } from "lucide-react";
 import { toast } from "react-toastify";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Skeleton } from "@/components/ui/skeleton";
+import { isReservedCloudDeviceKey } from "@/lib/devices/cloud";
 import { deviceDisplayLabel } from "@/lib/devices/shared";
 import { tw } from "@/lib/tw";
 import { cn, formatNumber, formatCurrency } from "@/lib/utils";
@@ -1512,12 +1513,15 @@ export default function SettingsClient() {
                           </SmallText>
                         </div>
                       </TokenInfo>
-                      <SecondaryButton
-                        type="button"
-                        onClick={() => startEditingDevice(device)}
-                      >
-                        Rename
-                      </SecondaryButton>
+                      {/* Cloud session devices are named by the server. */}
+                      {!isReservedCloudDeviceKey(device.deviceKey) && (
+                        <SecondaryButton
+                          type="button"
+                          onClick={() => startEditingDevice(device)}
+                        >
+                          Rename
+                        </SecondaryButton>
+                      )}
                     </>
                   )}
                 </TokenItem>

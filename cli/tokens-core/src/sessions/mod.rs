@@ -90,6 +90,9 @@ pub struct UnifiedMessage {
     /// Used to count user interaction turns (as opposed to API message count).
     #[serde(default)]
     pub is_turn_start: bool,
+    /// Explicit evidence only; None means unknown, not Standard.
+    #[serde(default)]
+    pub inference_speed: Option<crate::speed::InferenceSpeed>,
 }
 
 const fn default_message_count() -> i32 {
@@ -367,6 +370,7 @@ impl UnifiedMessage {
             dedup_key,
             session_title: None,
             is_turn_start: false,
+            inference_speed: None,
         }
     }
 

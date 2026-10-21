@@ -223,6 +223,7 @@ pub fn parse_fx_file(path: &Path) -> Vec<UnifiedMessage> {
             dedup_key: Some(dedup_key),
             session_title: session_title.clone(),
             is_turn_start: false,
+            inference_speed: None,
         });
     }
 
@@ -260,6 +261,7 @@ pub fn parse_fx_file(path: &Path) -> Vec<UnifiedMessage> {
                 dedup_key: Some(format!("fx:{session_id}:{UNKNOWN_MODEL}")),
                 session_title: session_title.clone(),
                 is_turn_start: false,
+                inference_speed: None,
             });
         }
     }

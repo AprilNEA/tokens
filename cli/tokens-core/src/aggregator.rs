@@ -3,6 +3,7 @@
 //! Uses rayon for parallel map-reduce operations.
 
 use crate::sessions::UnifiedMessage;
+use crate::speed::SpeedBreakdown;
 use crate::{
     ClientContribution, DailyContribution, DailyTotals, DataSummary, GraphMeta, GraphResult,
     TokenBreakdown, YearSummary,
@@ -254,7 +255,18 @@ impl DayAccumulator {
                 tokens: TokenBreakdown::default(),
                 cost: 0.0,
                 messages: 0,
+                speed_breakdown: Vec::new(),
             });
+
+        if let Some(inference) = msg.inference_speed {
+            SpeedBreakdown {
+                speed: inference.speed,
+                source: inference.source,
+                tokens: total_tokens,
+                messages: msg.message_count.max(0),
+            }
+            .add_to(&mut client_entry.speed_breakdown);
+        }
 
         // Merge provider_id if different provider contributes to same client+model
         if !client_entry
@@ -328,7 +340,12 @@ impl DayAccumulator {
                     tokens: TokenBreakdown::default(),
                     cost: 0.0,
                     messages: 0,
+                    speed_breakdown: Vec::new(),
                 });
+
+            for speed in client_contrib.speed_breakdown {
+                speed.add_to(&mut entry.speed_breakdown);
+            }
 
             // Merge provider_ids from parallel reduction
             for provider in client_contrib.provider_id.split(", ") {
@@ -389,6 +406,8 @@ impl DayAccumulator {
                 s.tokens.cache_write = s.tokens.cache_write.max(0);
                 s.tokens.reasoning = s.tokens.reasoning.max(0);
                 s.cost = s.cost.max(0.0);
+                s.speed_breakdown
+                    .sort_by_key(|bucket| (bucket.speed, bucket.source));
                 s
             })
             .collect();
@@ -443,4 +462,3 @@ pub fn calculate_intensities(contributions: &mut [DailyContribution]) {
         };
     }
 }
-

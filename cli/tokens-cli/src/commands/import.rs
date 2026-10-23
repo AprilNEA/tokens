@@ -417,6 +417,7 @@ fn add_row(day: &mut DayBuilder, client: &str, model: &str, tokens: TokenBreakdo
             tokens: TokenBreakdown::default(),
             cost: 0.0,
             messages: 0,
+            speed_breakdown: Vec::new(),
         });
     entry.tokens.input = entry.tokens.input.saturating_add(tokens.input);
     entry.tokens.output = entry.tokens.output.saturating_add(tokens.output);
@@ -484,4 +485,3 @@ fn is_iso_date(s: &str) -> bool {
         && b[5..7].iter().all(u8::is_ascii_digit)
         && b[8..10].iter().all(u8::is_ascii_digit)
 }
-

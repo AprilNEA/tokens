@@ -15,6 +15,7 @@ mod provider_identity;
 pub mod scanner;
 pub mod sessionize;
 pub mod sessions;
+pub mod speed;
 
 pub use aggregator::*;
 pub use bucket_tz::{bucket_timezone, parse_bucket_timezone, set_bucket_timezone, BucketTimezone};
@@ -356,6 +357,8 @@ pub struct ClientContribution {
     pub tokens: TokenBreakdown,
     pub cost: f64,
     pub messages: i32,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub speed_breakdown: Vec<speed::SpeedBreakdown>,
 }
 
 #[derive(Debug, Clone, serde::Serialize)]
@@ -2259,4 +2262,3 @@ fn should_keep_deduped_message(seen_keys: &mut HashSet<String>, message: &Unifie
         .as_ref()
         .is_none_or(|key| seen_keys.insert(key.clone()))
 }
-

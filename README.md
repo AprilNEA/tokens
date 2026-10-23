@@ -149,20 +149,6 @@ Clients that expose usage only through an account API need a sync step first —
 `tokens cursor sync`, `tokens antigravity sync`, `tokens trae sync`,
 `tokens warp sync` — after which they submit like everything else.
 
-**Inference speed:** Claude Code's `usage.speed` records actual Standard/Fast
-usage. Codex logs with `thread_settings_applied` can identify the selected
-Standard/Fast/Ultrafast preference, not the actual tier served or a one-turn
-override. Missing or unsupported metadata stays Unknown; model names and
-reasoning effort are never used to guess speed. Amp speed parsing is not yet
-supported.
-
-Submissions and the public profile API's daily nested model data and `modelUsage`
-summary carry optional
-`speedBreakdown` entries (`speed`, `source: reported | selected`, `tokens`,
-`messages`). Entries cover known-speed usage only; the remainder is Unknown.
-This metadata does not change token totals, model grouping or estimated prices.
-The web UI does not yet display a speed breakdown.
-
 Pricing comes from a combination of
 [LiteLLM](https://github.com/BerriAI/litellm),
 [OpenRouter](https://openrouter.ai) and
